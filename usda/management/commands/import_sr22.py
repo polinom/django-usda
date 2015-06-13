@@ -7,7 +7,7 @@ import sys
 import zipfile
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import transaction, DEFAULT_DB_ALIAS, reset_queries
+from django.db import DEFAULT_DB_ALIAS, reset_queries
 
 from usda.models import Food, FoodGroup, Weight, Nutrient, Footnote, \
                         DataSource, DataDerivation, NutrientData, Source,\
@@ -101,9 +101,9 @@ class Command(BaseCommand):
         if missing_files:
             logging.error('%s does not appear to be a valid SR22 database.  Unable to extract %s' % (filename, ', '.join(missing_files)))
         
-        transaction.commit_unless_managed(using=using)
-        transaction.enter_transaction_management(using=using)
-        transaction.managed(True, using=using)
+        # transaction.commit_unless_managed(using=using)
+        # transaction.enter_transaction_management(using=using)
+        # transaction.managed(True, using=using)
         
         if parse_all or parse_group:
             logging.info('Reading %s...' % FD_GROUP)
@@ -133,8 +133,8 @@ class Command(BaseCommand):
             logging.info('Reading %s...' % NUT_DATA)
             create_update_nutrient_data(''.join([byte for byte in zip_file.read(NUT_DATA)]).splitlines())
         
-        transaction.commit(using=using)
-        transaction.leave_transaction_management(using=using)
+        # transaction.commit(using=using)
+        # transaction.leave_transaction_management(using=using)
         
         zip_file.close()
 
